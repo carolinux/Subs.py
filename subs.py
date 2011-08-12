@@ -42,8 +42,8 @@ class SrtFile(SubtitleFile):
         return str(dt_object.hour).zfill(2) +":"+str(dt_object.minute).zfill(2)+":"+str(dt_object.second).zfill(2)+","+str(int(dt_object.microsecond/1000)).zfill(3)
      
 #read user input
-filepath = input('Enter the path of the srt file: ')
-add_time = input('Enter time to add in milliseconds (negative values for substraction: ')
+filepath = raw_input('Enter the path of the srt file: ')
+add_time = raw_input('Enter time to add in milliseconds (negative values for substraction: ')
 #catch excepshuns
 f = open(filepath, 'r+')
 sf = SrtFile(f) #can add support for other subtitle files
