@@ -1,6 +1,6 @@
 import datetime
 
-class subtitle_file:
+class subtitle_file: #giati mikra? :S
 
     def __init__(self,fileptr):
         self.file=fileptr
