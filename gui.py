@@ -1,20 +1,22 @@
 #!/usr/bin/env python
 
-__author__="zorbash"
-__contact__="zorbash@hotmail.com"
+__author__="carolinux, zorbash"
+__contact__="carolinegr@gmail.com, zorbash@hotmail.com"
 __date__ ="$Aug 10, 2011 8:59:46 PM$"
 
 
 import gtk
 import datetime
-import subs # our module
+import subs # our modzul
 
-
-
-
+#make prettier in general - WHERE BE DOCUMENTATION? FFS.
+#show teh file selected...
+#opshun to choose another fiel
 
 class Subfixer:
 
+	is_file_selected = False
+	supported_extensions = {"srt"}
 
         def destroy(self, window):
                 gtk.main_quit()
@@ -26,10 +28,12 @@ class Subfixer:
                 self.apply = gtk.Button("Apply")
 
                 #self.hbox = gtk.HBox()
+		self.label = gtk.Label("Enter time shift in milliseconds (can take negative values)")
                 self.vbox = gtk.VBox()
                 self.text = gtk.Entry()
 
                 self.vbox.pack_start(self.choose)
+		self.vbox.pack_start(self.label)
                 self.vbox.pack_start(self.text)
                 self.vbox.pack_start(self.apply)
                 #self.vbox.pack_start(self.hbox)
@@ -45,17 +49,27 @@ class Subfixer:
                 self.window.show_all()
 
 
-        
+        def show_alert(self, alert_text): #den ehei alert class? meh
+		alert_window = gtk.Window()
+		alert_window.add(gtk.Label(alert_text))
+		alert_window.set_size_request(400, 300)
+		#alert_window.connect("destroy", alert_window.main_quit())
+		alert_window.show_all()
+		
 
 
         def process_file(self):
+
+	    if self.is_file_selected == False:
+		self.show_alert("Please select a file first")
+		return
+
             start_of_write= self.f.tell()
             line=self.f.readline()
             
             while  (line!=""):
-                #print line 
-                if self.sf.is_time_line(line):#only parse lines with time values in them
-                    self.sf.add_time(line,self.add_time,start_of_write)
+                if self.sf.is_time_line(line):                           #only parse lines with time values in them
+                    self.sf.add_time(line,self.add_time,start_of_write)  #make dis throw an excepshun
                 start_of_write= self.f.tell()
                 line=self.f.readline()
 
@@ -63,10 +77,17 @@ class Subfixer:
             print "Finished converting your file"
 
         def apply_clicked(self, btn):
-                #self.browser.open(self.text.get_text())
-                self.add_time = int(self.text.get_text()) #IS THIS AN INT OR NOT? 
-                print self.add_time
+
+		try:
+                	self.add_time = int(self.text.get_text()) #IS THIS AN INT OR NOT? 
+
+		except:
+                	self.show_alert("Please enter a valid integer")
+			self.text.set_text("")
+                        return
+
                 self.process_file()
+
 
         def choose_clicked(self, btn):
                 
@@ -76,13 +97,27 @@ class Subfixer:
                 chooser_dialog.set_default_response(1)
 
                 if chooser_dialog.run() == 1:
+		    
                     print chooser_dialog.get_filename()
                     filepath = chooser_dialog.get_filename() #IS THIS A SRT FILE? (EXTENSION CHECK)
-                    self.f = open(filepath, 'r+')
-                    self.sf = srt_file(self.f)
                     chooser_dialog.destroy()
-                #if chooser_dialog.run() == 0:
-                 #   chooser_dialog.destroy()
+
+		    try:
+		    	extension = filepath.split(".")[len(filepath.split("."))-1] # \m/
+			print  extension
+		    except:
+                    	self.show_alert("Invalid file")            #case for .aaa? meh
+			return
+
+		    if extension not in self.supported_extensions: # woot, this is super readable
+			self.show_alert("Not a valid subtitle file")
+			return
+ 
+		    self.is_file_selected = True
+                    self.f = open(filepath, 'r+')
+                    self.sf = subs.srt_file(self.f) #extenshun chooser, liek a factory class or sumfin
+                else: #wtf, bugs..
+             	    chooser_dialog.destroy()
 
 
 if __name__ == "__main__":
