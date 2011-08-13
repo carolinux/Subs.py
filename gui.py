@@ -69,7 +69,12 @@ class Subfixer:
             
             while  (line!=""):
                 if self.sf.is_time_line(line):                           #only parse lines with time values in them
-                    self.sf.add_time(line,self.add_time,start_of_write)  #make dis throw an excepshun
+			try:
+                    		self.sf.add_time(line,self.add_time,start_of_write)  #make dis throw an excepshun
+			except:
+				self.show_alert("Problem parsing file")
+				return
+
                 start_of_write= self.f.tell()
                 line=self.f.readline()
 
@@ -104,7 +109,7 @@ class Subfixer:
 
 		    try:
 		    	extension = filepath.split(".")[len(filepath.split("."))-1] # \m/
-			print  extension
+			#print  extension
 		    except:
                     	self.show_alert("Invalid file")            #case for .aaa? meh
 			return
@@ -115,8 +120,8 @@ class Subfixer:
  
 		    self.is_file_selected = True
                     self.f = open(filepath, 'r+')
-                    self.sf = subs.srt_file(self.f) #extenshun chooser, liek a factory class or sumfin
-                else: #wtf, bugs..
+                    self.sf = subs.srt_file(self.f) #will implement extenshun chooser, liek a factory class or sumfin
+                else: #no bugs nao
              	    chooser_dialog.destroy()
 
 

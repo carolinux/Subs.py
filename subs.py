@@ -1,6 +1,6 @@
 import datetime
 
-class subtitle_file: #giati mikra? :S
+class subtitle_file: 
 
     def __init__(self,fileptr):
         self.file=fileptr
@@ -16,23 +16,35 @@ class srt_file(subtitle_file):
         return False
 
     def add_time(self,line,add_time,writePos):
-        array=line.split()
-        start_time= self.parse_time_from_string(array[0]);
-        start_time = start_time + datetime.timedelta(milliseconds= add_time)
-        end_time= self.parse_time_from_string(array[2]);
-        end_time = end_time + datetime.timedelta(milliseconds= add_time)
+
+	try:
+		array=line.split()
+		start_time= self.parse_time_from_string(array[0]);
+		start_time = start_time + datetime.timedelta(milliseconds= add_time)
+		end_time= self.parse_time_from_string(array[2]);
+
+	except:
+		raise InvalidFormatException("File is not a valid .srt file")
+		return
+
+	end_time = end_time + datetime.timedelta(milliseconds= add_time)
         self.format_time(end_time)
         self.file.seek(writePos,0)
         self.file.write(self.format_time(start_time)+" "+self.separator+" "+self.format_time(end_time)+"\n")
 
     def parse_time_from_string(self,timestring): #format: hh:mm:ss,mmm
 
-        array1= timestring.split(":") #what if wrong format?
-        hours = int(array1[0])
-        minutes=int(array1[1])
-        array2 = array1[2].split(",")
-        seconds = int(array2[0])
-        milliseconds= int(array2[1])
+	try:
+		array1= timestring.split(":") #what if wrong format?
+		hours = int(array1[0])
+		minutes=int(array1[1])
+		array2 = array1[2].split(",")
+		seconds = int(array2[0])
+		milliseconds= int(array2[1])
+	except:
+		raise InvalidFormatException("File is not a valid .srt file")
+		return
+
         return datetime.datetime(1,1,1,hours,minutes,seconds, milliseconds * 1000)
 
     def format_time(self,dt_object):
