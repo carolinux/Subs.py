@@ -16,7 +16,7 @@ import subs # our modzul
 class Subfixer:
 
 	is_file_selected = False
-	supported_extensions = {"srt"}
+	supported_extensions = ("srt")
 
         def destroy(self, window):
                 gtk.main_quit()
