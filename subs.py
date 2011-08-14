@@ -1,5 +1,11 @@
 import datetime
 
+class InvalidFormatException(Exception):
+    def __init__(self, value):
+       self.value = value
+    def __str__(self):
+       return repr(self.value)
+
 class subtitle_file: 
 
     def __init__(self,fileptr):
@@ -22,13 +28,12 @@ class srt_file(subtitle_file):
 		start_time= self.parse_time_from_string(array[0]);
 		start_time = start_time + datetime.timedelta(milliseconds= add_time)
 		end_time= self.parse_time_from_string(array[2]);
+		end_time = end_time + datetime.timedelta(milliseconds= add_time)
 
 	except:
 		raise InvalidFormatException("File is not a valid .srt file")
 		return
 
-	end_time = end_time + datetime.timedelta(milliseconds= add_time)
-        self.format_time(end_time)
         self.file.seek(writePos,0)
         self.file.write(self.format_time(start_time)+" "+self.separator+" "+self.format_time(end_time)+"\n")
 
