@@ -2,38 +2,38 @@
 
 __author__="carolinux, zorbash"
 __contact__="carolinegr@gmail.com, zorbash@hotmail.com"
-__date__ ="$Aug 10, 2011 8:59:46 PM$"
+__date__ ="$Aug 16, 2011 8:59:46 PM$"
 
 
 import gtk
-import subs # our modzul
+import subs   # mai modzul
 import shutil # for copying files
 
-#make prettier in general # HAO?
-#show teh file selected... DONE
-#opshun to choose another fiel, well, sure they can.. NOT NECESARY
-#make a backup of the file just in case, and delete it if all goes well :)  hhmm.. why evan delete?
-#factory class for different subtitle types.. or sumfin --> whee extenshuns
+# make UI prettier & easier to use. Usability ftw!
+# fix the indentation. I prefer all tabs.
+# fix naming to be more readable. Moar descriptive function names etc.
+# check for too much time added (trivial)
+# make a backup of the file just in case, and delete it if all goes well (trivial)
 
 class Subfixer:
 
 	is_file_selected = False
-	supported_extensions = ("srt")
 	alert_window = None
+	factory = subs.subtitle_file_factory()
 
         def destroy_alert(self,window):
 		self.alert_window.destroy()
  
         def quit(self, event_source):
                 try:
-			self.f.close()
+			self.subtitle_file.cleanup()
 		except:
 			pass
                 gtk.main_quit()
 
         def __init__(self):
                 self.window = gtk.Window()
-                self.choose = gtk.Button("Choose srt file")
+                self.choose = gtk.Button("Choose file")
                 
                 self.apply = gtk.Button("Apply")
 
@@ -61,7 +61,7 @@ class Subfixer:
                 self.window.show_all()
 
 
-        def show_alert(self, alert_text): #den ehei alert class? meh
+        def show_alert(self, alert_text): 
 		self.alert_window = gtk.Dialog("Message",None, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
 		self.alert_window.vbox.add(gtk.Label(alert_text))
 		btn = gtk.Button("OK")
@@ -74,31 +74,21 @@ class Subfixer:
 
 
         def process_file(self):
-
-	    if self.is_file_selected == False:
-		self.show_alert("Please select a file first")
+	   
+	    try:  
+            	self.subtitle_file = self.factory.create(self.filepath,self.extension) 
+	    except:
+		self.show_alert("Problem opening file")
 		return
-
-	    #create temp backup of file
-            shutil.copyfile(self.filepath,"backup.srt")
-	    self.f = open(self.filepath, 'r+')
-            self.sf = subs.srt_file(self.f) #will implement extenshun chooser, liek a factory class or sumfin
-
-            start_of_write= self.f.tell()
-            line=self.f.readline()
-            
-            while  (line!=""):
-                if self.sf.is_time_line(line):                           #only parse lines with time values in them
-			try:
-                    		self.sf.add_time(line,self.add_time,start_of_write)  #make dis throw an excepshun
-			except:
-				self.show_alert("Problem parsing file.") 
-				return
-
-                start_of_write= self.f.tell()
-                line=self.f.readline()
-
-            self.f.close()
+ 	    #create temp backup of file
+            #shutil.copyfile(self.filepath,"backup.srt") 
+	    try:
+	    	self.subtitle_file.process(self.add_time)
+	    except: 
+		self.show_alert("Problem parsing file")
+		self.subtitle_file.cleanup()
+		return	
+          
 	    #delete backup
             print "Finished converting your file"
 	    self.show_alert("File converted successfully")
@@ -106,19 +96,26 @@ class Subfixer:
         def apply_clicked(self, btn):
 
 		try:
-                	self.add_time = int(self.text.get_text()) #IS THIS AN INT OR NOT? 
+                	self.add_time = int(self.text.get_text())
 
 		except:
                 	self.show_alert("Please enter a valid integer")
 			self.text.set_text("")
                         return
 
+		if self.is_file_selected == False:
+			self.show_alert("Please select a file first")
+			return
+
                 self.process_file()
 
 
         def choose_clicked(self, btn):
                 
-                chooser_dialog = gtk.FileChooserDialog("Open .srt file", btn.get_toplevel(), gtk.FILE_CHOOSER_ACTION_OPEN)
+		self.is_file_selected = False
+		self.extension =""
+		self.file_text.set_text("File selected: None")
+                chooser_dialog = gtk.FileChooserDialog("Open file", btn.get_toplevel(), gtk.FILE_CHOOSER_ACTION_OPEN)
                 chooser_dialog.add_button(gtk.STOCK_CANCEL, 0)
                 chooser_dialog.add_button(gtk.STOCK_OPEN, 1)
                 chooser_dialog.set_default_response(1)
@@ -130,19 +127,19 @@ class Subfixer:
                     chooser_dialog.destroy()
 
 		    try:
-		    	extension = self.filepath.split(".")[len(self.filepath.split("."))-1] # \m/
+		    	self.extension = self.filepath.split(".")[len(self.filepath.split("."))-1] # \m/
 			#print  extension
 		    except:
                     	self.show_alert("Invalid file")            #case for .aaa? meh
 			return
 
-		    if extension not in self.supported_extensions: # woot, this is super readable
+		    if self.extension not in self.factory.supported_extensions: # woot, this is super readable
 			self.show_alert("Not a valid subtitle file")
 			return
  
 		    self.is_file_selected = True
 	   	    self.file_text.set_text("File selected:"+self.filepath)
-		   
+		    print "FILE SELECTED"
                 else: #no bugs nao :)
              	    chooser_dialog.destroy()
 

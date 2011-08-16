@@ -1,88 +1,88 @@
 1
-00:00:57,390 --> 00:00:59,727
+00:00:00,110 --> 00:00:02,447
 
 <i> It's been a while since I was</i>
 
 2
-00:00:59,789 --> 00:01:03,065
+00:00:02,509 --> 00:00:05,785
 
 <i> ...up here in front of you maybe i'll stick to the cards</i>
 
 3
-00:01:05,734 --> 00:01:09,950
+00:00:08,454 --> 00:00:12,670
 
 <i>There's been speculation that I was involved in the events
 that occurred on the freeway and the rooftop.</i>
 
 4
-00:01:10,220 --> 00:01:13,600
+00:00:12,940 --> 00:00:16,320
 
 <i>I'm sorry, Mr. Stark, but do you
 honestly expect us to believe that</i>
 
 5
-00:01:13,661 --> 00:01:15,687
+00:00:16,381 --> 00:00:18,407
 
 <i>that was  bodyguard
 in a suit</i>
 
 6
-00:01:15,748 --> 00:01:19,565
+00:00:18,468 --> 00:00:22,285
 
 <i> that conveniently appeared,
 despite the fact that you historically despise bodyguards?</i>
 
 7
-00:01:19,607 --> 00:01:21,110
+00:00:22,327 --> 00:00:23,830
 
 <i> Yes.</i>
 
 8
-00:01:21,171 --> 00:01:23,739
+00:00:23,891 --> 00:00:26,459
 
 <i>And this mysterious bodyguard was...</i>
 
 9
-00:01:23,780 --> 00:01:26,638
+00:00:26,500 --> 00:00:29,358
 
 <i>...somehow equipped with...</i>
 
 10
-00:01:26,639 --> 00:01:29,198
+00:00:29,359 --> 00:00:31,918
 
 <i>...an undisclosed Stark high-tech
 powered battle suit?</i>
 
 11
-00:01:29,199 --> 00:01:31,733
+00:00:31,919 --> 00:00:34,453
 
 <i> I know that it's confusing.</i>
 
 12
-00:01:31,769 --> 00:01:34,357
+00:00:34,489 --> 00:00:37,077
 
 <i>It is one thing
 to question the official story</i>
 
 13
-00:01:34,390 --> 00:01:38,912
+00:00:37,110 --> 00:00:41,632
 
 <i> and another thing entirely to make wild accusations
 or insinuate that I'm a superhero.</i>
 
 14
-00:01:41,213 --> 00:01:44,868
+00:00:43,933 --> 00:00:47,588
 
 <i>I mean, let's face it I'm not,
 the heroic type.</i>
 
 15
-00:01:45,550 --> 00:01:48,253
+00:00:48,270 --> 00:00:50,973
 
 <i> I've a laundry list of character defects,
 all the mistakes that I've made...</i>
 
 16
-00:01:48,254 --> 00:01:50,313
+00:00:50,974 --> 00:00:53,033
 
 <i>largely public.</i>
