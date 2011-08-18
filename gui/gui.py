@@ -39,9 +39,13 @@ class Subfixer:
 
         def __init__(self):
 
+                
+                self.builder = gtk.Builder()
+                self.builder.add_from_file(self.UI_MAIN_WINDOW)
+                self.builder.connect_signals(self)
 
-
-
+                self.window = self.builder.get_object('main_window')
+                self.window.show_all()
 
                 #commenting former ui initilization
                 """
