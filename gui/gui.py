@@ -38,6 +38,13 @@ class Subfixer:
                 gtk.main_quit()
 
         def __init__(self):
+
+
+
+
+
+                #commenting former ui initilization
+                """
                 self.window = gtk.Window()
                 self.choose = gtk.Button("Choose file")
                 
@@ -65,7 +72,7 @@ class Subfixer:
                 #self.window.add(self.text)
                 #self.window.add(self.go)
                 self.window.show_all()
-
+                """
 
         def show_alert(self, alert_text): 
 		self.alert_window = gtk.Dialog("Message",None, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
