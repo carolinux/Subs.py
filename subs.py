@@ -22,7 +22,7 @@ class NegativeTimeException(Exception):
 
 class subtitle_file_factory: #halp, i'm trapped
 
-     supported_extensions = ("srt","ssa","ass")
+     supported_extensions = ("srt","ssa","ass","idx")
      def __init__(self):
 	pass
 
@@ -30,6 +30,8 @@ class subtitle_file_factory: #halp, i'm trapped
 	try:	
 		if extension=="srt":
 			return srt_file(filepath)
+		if extension=="idx":
+			return idx_file(filepath)
 		if extension=="ssa" or extension =="ass" :
 			return ssa_file(filepath)
 		return None
@@ -63,6 +65,62 @@ class subtitle_file:
 
     def cleanup(self):
        self.file.close()
+
+
+class idx_file(subtitle_file):
+
+
+
+
+    def is_time_line(self,line):
+	
+    	if re.match('timestamp:',line) is not None: 
+		return True
+	
+	return False
+
+
+    def format_time(self,dt_object):
+        return str(dt_object.hour).zfill(2) +":"+str(dt_object.minute).zfill(2)+":"+str(dt_object.second).zfill(2)+":"+str(int(dt_object.microsecond/1000)).zfill(3)
+
+
+    def add_time(self,line,add_time,writePos):
+
+	try:
+		
+		times= re.search('[0-9][0-9][:][0-6][0-9]:[0-6][0-9][:][0-9][0-9][0-9]',line)
+		start_time= self.parse_time_from_string(times.group(0));
+		start_time = start_time + datetime.timedelta(milliseconds= add_time)
+		line1= line.replace(times.group(0),self.format_time(start_time))
+		
+
+	except:
+
+		raise InvalidFormatException("File is not a valid .idx file")
+		return
+
+	
+        self.file.seek(writePos,0)
+        self.file.write(line1)
+
+    def parse_time_from_string(self,timestring): #format:hh:mm:ss:mmm
+
+	try:
+		array1= timestring.split(":") 
+		hours = int(array1[0])
+		minutes=int(array1[1])	
+		seconds = int(array1[2])
+		milliseconds= int(array1[3])
+
+	except:
+		raise InvalidFormatException("File is not a valid .idx file")
+		return
+
+        return datetime.datetime(1,1,1,hours,minutes,seconds, milliseconds * 1000)
+
+
+
+
 
 class ssa_file(subtitle_file):
 
@@ -142,7 +200,6 @@ class srt_file(subtitle_file):
 		end_time = end_time + datetime.timedelta(milliseconds= add_time)
 
 	except:
-		#print "timedelta :("
 		raise InvalidFormatException("File is not a valid .srt file")
 		return
 
@@ -152,14 +209,13 @@ class srt_file(subtitle_file):
     def parse_time_from_string(self,timestring): #format: hh:mm:ss,mmm
 
 	try:
-		array1= timestring.split(":") #what if wrong format?
+		array1= timestring.split(":") 
 		hours = int(array1[0])
 		minutes=int(array1[1])
 		array2 = array1[2].split(",")
 		seconds = int(array2[0])
 		milliseconds= int(array2[1])
 	except:
-		#print "parsing err0r"
 		raise InvalidFormatException("File is not a valid .srt file")
 		return
 
