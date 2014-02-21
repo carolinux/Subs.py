@@ -8,6 +8,7 @@ __date__ ="$Aug 16, 2011 8:59:46 PM$"
 import gtk
 import subs   # mai modzul
 import shutil # for copying files
+import os
 
 # make UI prettier & easier to use. Usability ftw!
 # fix the indentation. I prefer all tabs.
@@ -81,7 +82,10 @@ class Subfixer:
 		self.show_alert("Problem opening file")
 		return
  	    #create temp backup of file
-            #shutil.copyfile(self.filepath,"backup.srt") 
+	    backup = self.basename+"-backup."+self.extension
+	    shutil.copyfile(self.filepath,backup) 
+	    print "Created backup  at {}".format(backup)
+            
 	    try:
 	    	self.subtitle_file.process(self.add_time)
 	    except: 
@@ -127,8 +131,9 @@ class Subfixer:
                     chooser_dialog.destroy()
 
 		    try:
-		    	self.extension = self.filepath.split(".")[len(self.filepath.split("."))-1] # \m/
-			#print  extension
+		    	self.basename, self.extension = os.path.splitext(self.filepath)
+			self.extension = self.extension[1:]
+			print  self.extension
 		    except:
                     	self.show_alert("Invalid file")            #case for .aaa? meh
 			return
