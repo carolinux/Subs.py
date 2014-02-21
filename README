@@ -1,4 +1,5 @@
-Subtitle Syncer for srt and ssa/ass files.
+Subtitle Syncer for srt and ssa/ass files. Makes the subtitles jump forward or backwards. 
+Invoke as python gui.py or chmod gui.py to be executable and run it.
 
 Made by Carolinux (carolinegr@gmail.com)
 
